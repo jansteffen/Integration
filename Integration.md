@@ -1,31 +1,39 @@
 # Integrationskonzept für Effizienzmaßnahmen enerchart
-Nachdem im vorigen Kapitel ein umfassendes Funktionskonzept erarbeitet wurde, muss nun ein Plan geschaffen werden, wie diese Funktionen am besten in die bereits bestehenden Software eingebaut werden können. Dabei sollten möglichst viele Bestandskomponenten, sowohl im Front-End und im Back-End, sinnvoll wiederverwendet werden. So wird nicht nur der Entwicklungsaufwand minimiert, sondern die Bedienung und aussehen werden dadurch auch konform mit anderen Teilen der Software.
-
+Nachdem ein umfassendes Funktionskonzept erarbeitet wurde, muss nun ein Plan geschaffen werden, wie diese Funktionen am besten in die bereits bestehenden Software eingebaut werden können. Dabei sollten möglichst viele Bestandskomponenten, sowohl im Front-End als auch im Back-End, sinnvoll wiederverwendet werden. So wird nicht nur der Entwicklungsaufwand minimiert, sondern die Bedienung und das Aussehen für den Benutzer werden dadurch Konform mit anderen Teilen der Software.
 
 
 ## Neue/Geänderte Funktionsbereiche
-Die Integration betrifft insgesamt drei Funktionsbereiche von enerchart, die jeweils über das Hauptmenü an der linken Seite des Bildschirms erreicht werden können. Der Zugang zu diesen Funktionsbereichen kann an zugeteilten Berechtigungen eines Nutzers gekoppelt werden, sodass die dazugehörigen Menüpunkte nur sichtbar werden, wenn der aktuelle Nutzer auch dazu berechtigt ist, diesen Funktionsbereich zu verwenden.
+Die Integration betrifft insgesamt drei Funktionsbereiche von *enerchart*, die jeweils über das Hauptmenü an der linken Seite des Bildschirms erreicht werden können. 
 
-Unter den drei betroffenen Bereichen sind zwei völlig neu und ein bereits bestehender Bereich:
+Unter den drei betroffenen Bereichen sind Zwei völlig neu und ein bereits bestehender Bereich:
 
 ![MenüScreenshots](img/MenüScreenshot.png)
 
 
-1. *Neu*: Energieträger (Sichtbarkeit für Nutzer benötigt neue Berechtigung)
-2. *Neu*: Effizienzmaßnahmen (Sichtbarkeit für Nutzer benötigt neue Berechtigung)
+1. *Neu*: Energieträger
+2. *Neu*: Effizienzmaßnahmen
 3. "Maßnahmen und Notizen" umgewidmet zu "Notizen"
 
-Offene Frage: Gleiche Berechtigung für beides oder separat?
+Der Zugang zu Funktionsbereichen und die Sichtbarkeit der Menüeinträge kann an Berechtigungen eines Nutzers gekoppelt werden. Das bedeutet, dass die Menüpunkte nur sichtbar werden, wenn der aktuelle Nutzer dauch dazu berechtigt ist, diesen Funktionsbereich zu verwenden.
+
+In der Benutzerverwaltung von *enerchart* werden Berechtigungen allerdings nicht pro Benutzer verteilt, sonder pro Benutzerrolle. Benutzerrollen dienen dazu, mehrere Benutzer zu Gruppieren. 
+
+Offene Frage:
+* Gleiche Berechtigung für Energieträger und Effizienzmaßnahmen oder separat?
+* Separate Berechtigungen für Einsehen und Erstellen von Maßnahmen?
+* "Best-Practice" um neue Berechtigung in das System einzuführen?
+    * Benutzergruppen und welche Berechtigungen sie haben werden gespeichert in Datenbanktabelle `multitenancy_multitenancyrole`
+    * Berechtigungen werden deklariert in `module/User/src/User/Rbac/Permissions.php`
 
 # 1. Energieträger
 
-Im allgemeinen versteht man unter "Energieträger" ein medium für Energie, also beispielsweise Strom, Öl oder Gas. Da diese unterschiedliche Eigenschaften wie Preis, CO2-Ausstoß und Brennwert aufweisen, soll nun in enerchart eine neue Datenstruktur eingeführt werden, welche diese Eigenschaften logisch bündelt.
+Im Allgemeinen versteht man unter "Energieträger" ein Medium für Energie, also beispielsweise Strom, Öl oder Gas. Da diese unterschiedliche Eigenschaften wie Preis, CO2-Ausstoß und Brennwert aufweisen, soll nun in enerchart eine neue Datenstruktur eingeführt werden, welche diese Eigenschaften logisch bündelt.
 
-Die Benutzer müssen dazu im System eine Liste ihrer aktiv verwendeten Energieträgern anlegen und diese mit Werten versehen. Es ist außerdem möglich, einen Typ von Energieträger, z.B. Storm, mehrfach hinzuzufügen und mit unterschiedlichen Werten zu versehen. Dadurch kann das Kaufen von Strom von mehreren Anbietern modelliert werden.
+Die Benutzer müssen dazu im System eine Liste ihrer aktiv verwendeten Energieträgern anlegen und diese mit Werten versehen. Es ist außerdem möglich, ein Energieträgermedium, z.B. Storm, mehrfach hinzuzufügen, und mit unterschiedlichen Werten zu versehen. Dadurch kann das Kaufen von Strom von mehreren Anbietern modelliert werden.
 
-Der Menüpunkt "Energieträger" führt den Nutzer zu einer Übersicht von verwendeten Energieträgern. Diese Liste soll mithilfe der UI-Komponente "AG-Grid" dargestellt werden, mit zwei möglichen Ansichten: Standard-Tabelle und Kachelansicht. Falls die Liste noch leer ist, wird stattdessen eine Erläuterung dieses Funktionsbereiches angezeigt.
+Der Menüpunkt "Energieträger" führt den Nutzer zu einer Übersicht von verwendeten Energieträgern. Diese Liste wird mithilfe der UI-Komponente "AG-Grid" dargestellt, die in *enerchart* bereits für viele vergleichbare Listen verwendet wird. Besonders ist hier, dass zwei mögliche Ansichten angeboten werden: Standard-Tabelle und Kachelansicht. Falls die Liste noch leer ist, wird stattdessen eine Erläuterung dieses Funktionsbereiches angezeigt.
 
-Die Kachelansicht soll eine optisch attraktive Darstellung der Einträge bieten. Typ-abhängige Icons helfen dabei, schnell optisch zu verarbeiten:
+Die Kachelansicht soll eine optisch attraktive Darstellung der Einträge bieten. Typ-abhängige Icons helfen dem Nutzer dabei, eine große Zahl von Einträgen schnell optisch zu Verarbeiten/Kategorisieren:
 
 ![Kachelansicht von Energieträgern](img/Datenträger.png)
 
@@ -150,24 +158,28 @@ Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird
 
 
 ## 2.4. Energieeffizienz
-Der Reiter Energieeffizienz dient als Kalkulationshilfe um die monetäre Einsparung einer Maßnahme zu schätzen. Der Nutzer gibt an, wie viel von welchen Energieträgern eingespart wird, und basierend darauf wird ein Gesamtjahreswert von Euro und CO2 berechnet. Dieser Gesamtwert kann anschließend im Tab Wirtschaftlichkeit für d
-Einsparungen für Energieträger können hinzugefügt werden.
-Zur Darstellung `EditDisplayBox` verwenden.
+Der Reiter Energieeffizienz dient als Kalkulationshilfe um die monetäre Einsparung einer Maßnahme zu schätzen. Der Nutzer gibt an, wie viel von welchen Energieträgern eingespart wird, und basierend darauf wird ein Gesamtjahreswert von Euro und CO2 berechnet. Dieser Gesamtwert kann anschließend im Tab "Wirtschaftlichkeit" verwendet werden, um die Wirtschaftlichkeit der Maßnahme zu bewerten.
+
+Um diese Funktionalität zu verwenden muss der Benutzer zunächst auswählen, welche Energieträger von einer Maßnahme betroffen ist. Über einen Button wird ein separates Pop-up ausgelöst, in welchem der Nutzer aus einer Liste von allen aktiven Energieträgern im System auswählen kann.
+
+Die gewählten Energieträger erscheinen dann als Liste im Hauptfenster, und der Nutzer kann für jeden Energieträger individuell eine erwartete Einsparung eintragen. Mithilfe der in den Energieträgern hinterlegten Werten werden daraus Jahreswerte für CO2- und Euroeinsparung berechnet, und anschließend aufsummiert.
 
 (TODO Bild)
 
-Speichern entweder als eigene Datenstruktur oder als JSON-String innerhalb der Datenstruktur Effizienzmaßnahmen
+Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entweder als eigene Datenbanktabelle oder als JSON-String innerhalb der Datenstruktur Effizienzmaßnahmen
 
 ### 2.4.1. Neue Datenstruktur "Energieersparniss"
-|Spalte|Typ|
-|---|---|
-|id|`integer` (Primärschlüssel)|
-|zugehörige Maßnahme|Verweis Maßnahme|
-|Betroffener Energieträger|Verweis Energieträger|
-|Einsparung|`float`|
+|Spalte|Typ|Notiz|
+|---|---|---|
+|id|`integer`|Primärschlüssel|
+|zugehörige Maßnahme|Verweis Maßnahme|n:1|
+|Betroffener Energieträger|Verweis Energieträger|n:m|
+|Einsparung|`float`|Einheit abhängig vom Energieträger; Eurowert wird berechnet
 |||
 
 ## 2.5. Wirtschaftlichkeit
+Ein wichtiger Teil einer Maßnahmen ist die Möglichkeit, ihre wirtschaftliche Rentabilität zu beurteilen. Die Norm DIN 17463 dient als Leitfaden, um energiebezogene Investitionen systematisch und transparent zu bewerten. Teil dieser Norm ist die VALERI Rechnung (Valuation of Energyy Related  Investments)
+
 * VALERI-Eingabe-Formular für Wahrscheinlichster Fall, Best-Case und Worst-Case (Wie in ESB)
 * Zusatzfaktoren hinzufügen/entfernen/bearbeiten
     * Zur Darstellung `EditDisplayBox` verwenden.
@@ -176,22 +188,22 @@ Speichern entweder als eigene Datenstruktur oder als JSON-String innerhalb der D
 * Automatisch berechnete Cashflow-Tabelle und Ergebnisse der VALERI-Rechnung (Wie in ESB)
 
 #### Neue Datenstruktur "Zusatzfaktor"
-|Spalte|Typ|
-|---|---|
-|id|`integer` (Primärschlüssel)|
-|zugehörige Maßnahme|Verweis Maßnahme|
-|Bezeichnung|`String`|
-|Einsparungsbetrag|`float`|
-|Art der Preisteigerung|`Enum` (Energie, sonstige, keine)|
-|Häufigkeit|`Enum` (Jährlich, periodisch, einmalig)|
-|Periode|`integer`|
-|stop nach wievielen Jahren|`integer`|
+|Spalte|Typ|Notiz|
+|---|---|---|
+|id|`integer`|Primärschlüssel|
+|zugehörige Maßnahme|Verweis Maßnahme|n:1|
+|Bezeichnung|`String`||
+|Einsparungsbetrag|`float`||
+|Art der Preisteigerung|`Enum`|Energie, sonstige, keine|
+|Häufigkeit|`Enum`|Jährlich, periodisch, einmalig|
+|Periode|`integer`||
+|Stop nach wievielen Jahren|`integer`||
 |||
 
 (TODO Bild)
 
 #### Ausbaumöglichkeit
-* Graph-Darstellung des Cashflows
+* Graph-Darstellung des Cashflows; benötigt Komponente um Graph zu Rendern.
 
 ## 3. Notizen
 
@@ -199,4 +211,4 @@ Bisher existiert in *enerchart* ein Funktionsbereich "Maßnahmen und Notizen", d
 
 Mit der Einführung des neuen, umfangreicheren Managementsystems für Effizienzmaßnahmen soll dieser Funktionsbereich nun in lediglich "Notizen" umgewidmet werden. Der Funktionsumfang bleibt vorerst gleich, sodass eine Migration von Bestandssystemen möglichst simpel ist.
 
-Hier muss noch recherchiert werden, wo Notizen überall verwendet werden.
+Hier muss noch recherchiert werden, wo Notizen überall verwendet werden, u.a. es existiert Funktionalität die Notizen automatisch generiert, wenn bestimmte Konditionen getroffen werden. Muss das durch automatisches generieren von Maßnahmen ersetzt werden?
