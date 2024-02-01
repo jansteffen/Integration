@@ -7,7 +7,7 @@ Die Integration betrifft insgesamt drei Funktionsbereiche von *enerchart*, die j
 
 Unter den drei betroffenen Bereichen sind Zwei völlig neu und ein bereits bestehender Bereich:
 
-![MenüScreenshots](img/MenüScreenshot.png)
+![MenüScreenshots](Img/MenüScreenshot.png)
 
 
 1. *Neu*: Energieträger
@@ -35,7 +35,7 @@ Der Menüpunkt "Energieträger" führt den Nutzer zu einer Übersicht von verwen
 
 Die Kachelansicht soll eine optisch attraktive Darstellung der Einträge bieten. Typ-abhängige Icons helfen dem Nutzer dabei, eine große Zahl von Einträgen schnell optisch zu Verarbeiten/Kategorisieren:
 
-![Kachelansicht von Energieträgern](img/Datenträger.png)
+![Kachelansicht von Energieträgern](Img/Datenträger.png)
 
 Anforderung:
 * Jeder Energieträger benötigt ein Icon
@@ -128,13 +128,13 @@ Rechts vom Dialog-Popup werden über das ExtraActions Panel wichtige Aktionen wi
 
  ## 2.2 Basisdaten
 
- ![Maßnahme Basisdaten Dialog](img/MaßnahmeDialog.png)
+ ![Maßnahme Basisdaten Dialog](Img/MaßnahmeDialog.png)
 Anforderung: Möglichkeit Dateien hochzuladen bzw. aus bereits hochgeladenen Dateien auszuwählen
 
 ## 2.3 Bearbeitungsprotokoll
 Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird als Teil jeder Maßnahme ein chronologisches Bearbeitungsprotokoll geführt. Dieses besteht zum einen Teil aus automatisch generierten Einträgen, welche beispielsweise Zustandsänderungen vermerken, und zum anderen Teil aus manuell geschriebenen Einträgen von Mitarbeitern.
 
-![Bearbeitungsprotokoll Bild](img/MaßnahmeDialog2.png)
+![Bearbeitungsprotokoll Bild](Img/MaßnahmeDialog2.png)
 
 * Eingabeformular für neuen Protokolleintrag:
     * Großes Textfeld
@@ -164,7 +164,7 @@ Um diese Funktionalität zu verwenden muss der Benutzer zunächst auswählen, we
 
 Die gewählten Energieträger erscheinen dann als Liste im Hauptfenster, und der Nutzer kann für jeden Energieträger individuell eine erwartete Einsparung eintragen. Mithilfe der in den Energieträgern hinterlegten Werten werden daraus Jahreswerte für CO2- und Euroeinsparung berechnet, und anschließend aufsummiert.
 
-![Tab Energieeffizienz](img/MaßnahmeDialog3.png)
+![Tab Energieeffizienz](Img/MaßnahmeDialog3.png)
 
 Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entweder als eigene Datenbanktabelle oder als JSON-String innerhalb der Datenstruktur Effizienzmaßnahmen
 
