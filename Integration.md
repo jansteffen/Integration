@@ -164,7 +164,7 @@ Um diese Funktionalität zu verwenden muss der Benutzer zunächst auswählen, we
 
 Die gewählten Energieträger erscheinen dann als Liste im Hauptfenster, und der Nutzer kann für jeden Energieträger individuell eine erwartete Einsparung eintragen. Mithilfe der in den Energieträgern hinterlegten Werten werden daraus Jahreswerte für CO2- und Euroeinsparung berechnet, und anschließend aufsummiert.
 
-(TODO Bild)
+![Tab Energieeffizienz](img/MaßnahmeDialog3.png)
 
 Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entweder als eigene Datenbanktabelle oder als JSON-String innerhalb der Datenstruktur Effizienzmaßnahmen
 
@@ -178,16 +178,20 @@ Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entw
 |||
 
 ## 2.5. Wirtschaftlichkeit
-Ein wichtiger Teil einer Maßnahmen ist die Möglichkeit, ihre wirtschaftliche Rentabilität zu beurteilen. Die Norm DIN 17463 dient als Leitfaden, um energiebezogene Investitionen systematisch und transparent zu bewerten. Teil dieser Norm ist die VALERI Rechnung (Valuation of Energyy Related  Investments)
+Ein wichtiger Teil einer Maßnahmen ist die Möglichkeit, ihre wirtschaftliche Rentabilität zu beurteilen. Die Norm DIN 17463 dient als Leitfaden, um energiebezogene Investitionen systematisch und transparent zu bewerten. Teil dieser Norm ist die VALERI Rechnung (Valuation of Energyy Related Investments), eine erweiterte Version der Kapitalwertmethode. Die Formel erlaubt es, den heutigen Kapitalwert einer Investition zu berechnen, unter Berücksichtigung von Abzinsung von zukünftigen Erfolgen.
+
+Ein wichtiger Teil der VALERI-Rechnung ist der erwartete Betrag, der durch die Maßnahme jährlich eingespart wird. Dieser Wert kann der Benutzer entweder mit Hilfe des Tabs "Energieeffizienz" basierend auf Energieträgerverbrauch abschätzen, oder alternativ als fester Wert direkt eingegeben werden.
+
+Für alle weiteren Eingabefelder dient Energiesparbericht.de als Vorlage. Auch die Möglichkeit eigene Zusatzfaktoren zu definieren soll ähnlich wie in Energiesparbericht implementiert werden.
 
 * VALERI-Eingabe-Formular für Wahrscheinlichster Fall, Best-Case und Worst-Case (Wie in ESB)
 * Zusatzfaktoren hinzufügen/entfernen/bearbeiten
     * Zur Darstellung `EditDisplayBox` verwenden.
     * Bearbeitung jeweils in separatem Pop-up
     * Benötigt neue Datenstruktur Zusatzfaktoren (1:n verhältniss von Effizienzmaßnahmen zu Zusatzfaktoren)
-* Automatisch berechnete Cashflow-Tabelle und Ergebnisse der VALERI-Rechnung (Wie in ESB)
+* Ausgabe der Ergebnisse wie in ESB, inklusive Cashflow-Tabelle
 
-#### Neue Datenstruktur "Zusatzfaktor"
+### 2.5.1. Neue Datenstruktur "Zusatzfaktor"
 |Spalte|Typ|Notiz|
 |---|---|---|
 |id|`integer`|Primärschlüssel|
