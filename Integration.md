@@ -16,14 +16,9 @@ Unter den drei betroffenen Bereichen sind Zwei völlig neu und ein bereits beste
 
 Der Zugang zu Funktionsbereichen und die Sichtbarkeit der Menüeinträge kann an Berechtigungen eines Nutzers gekoppelt werden. Das bedeutet, dass die Menüpunkte nur sichtbar werden, wenn der aktuelle Nutzer dauch dazu berechtigt ist, diesen Funktionsbereich zu verwenden.
 
-In der Benutzerverwaltung von *enerchart* werden Berechtigungen allerdings nicht pro Benutzer verteilt, sonder pro Benutzerrolle. Benutzerrollen dienen dazu, mehrere Benutzer zu Gruppieren. 
+In der Benutzerverwaltung von *enerchart* werden Berechtigungen allerdings nicht pro Benutzer verteilt, sonder pro Benutzerrolle. Benutzerrollen dienen dazu, mehrere Benutzer zu Gruppieren.
 
-Offene Frage:
-* Gleiche Berechtigung für Energieträger und Effizienzmaßnahmen oder separat?
-* Separate Berechtigungen für Einsehen und Erstellen von Maßnahmen?
-* "Best-Practice" um neue Berechtigung in das System einzuführen?
-    * Benutzergruppen und welche Berechtigungen sie haben werden gespeichert in Datenbanktabelle `multitenancy_multitenancyrole`
-    * Berechtigungen werden deklariert in `module/User/src/User/Rbac/Permissions.php`
+Für die beiden neuen Funktionsbereiche sollen jeweils separate Berechtigungen für Lesen und Schreiben angelegt werden, also insgesamt vier neue Berechtigungen. Berechtigungen werden deklariert in der Datei `module/User/src/User/Rbac/Permissions.php`
 
 # 1. Energieträger
 
@@ -43,27 +38,27 @@ Anforderung:
 ## 1.1. Datenstruktur für Energieträger
 In der Datenbank muss einene neue Datenstruktur angelegt werden, um Energieträger zu führen:
 
-|Spalte|Typ|Sichtbarkeit in Übersicht
-|---|---|---|
-|id|`integer` (Primärschlüssel)|❌|
-|Name|`String`|✅|
-|Energieträgermedium|`Enum` (Strom/Öl/Kohle/...)|✅|
-|Preisentwicklung|Verweis unsichtbarer Datenpunkt (Typ Währung)|✅ (Nur neuster Wert)|
-|Preisentwicklung Datenquelle|Verweis Datenpunkt oder leer für manuelle Eingabe|❌|
-|CO2-Ausstoß pro kWh|Verweis unsichtbarer Datenpunkt (Typ Ausstoß kg)|❔ (Nur neuster Wert)|
-|CO2-Ausstoß Datenquelle|Verweis Datenpunkt oder leer für manuelle Eingabe|❌|
-|Brennwert|Verweis unsichtbarer Datenpunkt (Typ Leistung kWh)|❔ (Nur neuster Wert)|
-|Brennwert Datenquelle|Verweis Datenpunkt oder leer für manuelle Eingabe|❌|
-|Letzte Änderung|`Date`|❔|
-|Erstellt am|`Date`|❔|
-|aktiv|`boolean`|❔|
+|Spalte|Typ|Notiz|Sichtbarkeit in Übersicht|
+|---|---|---|---|
+|id|`integer`|Primärschlüssel|❌|
+|Name|`String`||✅|
+|Energieträgermedium|`Enum`|Strom/Öl/Kohle/...|✅|
+|Preisentwicklung|Verweis unsichtbarer Datenpunkt (Typ Währung)||✅ (Nur neuster Wert)|
+|Preisentwicklung Datenquelle|Verweis Datenpunkt oder leer für manuelle Eingabe||❌|
+|CO2-Ausstoß pro kWh|Verweis unsichtbarer Datenpunkt (Typ Ausstoß kg)||❔ (Nur neuster Wert)|
+|CO2-Ausstoß Datenquelle|Verweis Datenpunkt oder leer für manuelle Eingabe||❌|
+|Brennwert|Verweis unsichtbarer Datenpunkt (Typ Leistung kWh)||❔ (Nur neuster Wert)|
+|Brennwert Datenquelle|Verweis Datenpunkt oder leer für manuelle Eingabe||❌|
+|Letzte Änderung|`Date`|Automatisch befüllter Wert|❔|
+|Erstellt am|`Date`|Automatisch befüllter Wert|❔|
+|aktiv|`boolean`|Inaktive Energieträger werden standardmäßig aus der Übersicht ausgefiltert|❔|
 ||||
 
 ❌ = Nicht Sichtbar    
 ✅ = Immer Sichtbar     
 ❔ = Optional
 
-Für Preisentwicklung, CO2-Ausstoß und Brennwert werden im Hintergrund für den Benutzer nicht sichtbare Datenpunkte verwendet. Die Werte dafür können entweder manuell vom Benutzer angegeben werden, oder von einem anderen vom Benutzer ausgewählten Datenpunkt vom gleichen Typ bezogen werden.
+Für Preisentwicklung, CO2-Ausstoß und Brennwert werden im Hintergrund für den Benutzer nicht sichtbare Datenpunkte angelegt und verwendet. Die Werte dafür können entweder manuell vom Benutzer direnkt eingegeben werden, oder von einem anderen ausgewählten Datenpunkt vom gleichen Typ bezogen werden.
 
 ## 1.2. Pop-Up Dialog "neuen Energieträger anlegen"
 
@@ -89,7 +84,7 @@ Eine Energieeffizienzmaßnahme im Kontext der ISO-50001 bezieht sich auf eine ge
 
 Solche Maßnahmen können vielfältig sein und beispielsweise die Verbesserung von Produktionsprozessen, den Einsatz energieeffizienterer Technologien, die Optimierung von Gebäudeenergiesystemen oder die Schulung von Mitarbeitern zu bewusstem Energieverbrauch umfassen. Das Ziel besteht darin, den Energieverbrauch zu reduzieren, Kosten zu senken, Umweltauswirkungen zu minimieren und insgesamt die betriebliche Energieleistung zu optimieren.
 
-In *enerchart* wird nun ein Managementsystem integriert, welches eine digitale Buchhaltung von Effizienzmaßnahmen ermöglicht. Der neue Menüpunkt "Effizienzmaßnahmen" führt zu einer Übersicht von Effizienzmaßnahmen, mit denen der eingeloggte Benutzer verbunden ist. Dadurch bildet sich eine Art "To-Do Liste", welche dem Benutzer alle für ihn anstehenden Aufgaben auf einen Blick überschaubar dargestellt werden. Für eine umfassendere Übersicht kann der Nutzer auch auf eine Ansicht wechseln, welche alle Maßnahmen anzeigt, unabhängig davon ob er selbst damit verbunden ist oder icht.
+In *enerchart* wird nun ein Managementsystem integriert, welches eine digitale Buchhaltung von Effizienzmaßnahmen ermöglicht. Der neue Menüpunkt "Effizienzmaßnahmen" führt zu einer Übersicht von Effizienzmaßnahmen, mit denen der eingeloggte Benutzer verbunden ist. Dadurch bildet sich eine Art "To-Do Liste", welche dem Benutzer alle für ihn anstehenden Aufgaben auf einen Blick überschaubar dargestellt werden. Für eine umfassendere Übersicht kann der Nutzer auch auf eine Ansicht wechseln, welche alle Maßnahmen anzeigt, unabhängig davon ob er selbst damit verbunden ist oder nicht.
 
 Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen- und Kachelansicht. Bei einer leeren Liste wird stattdessen eine Erläuterung/Hilfetext angezeigt.
 
@@ -116,20 +111,22 @@ Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen
 |VALERI-Eingabefelder|Ganz viele floats...|Siehe VALERI-Rechnung in ESB|❌|
 ||||
 
-Detail-Ansicht von Maßnahme öffnet sich in einem Pop-up Dialog mit mehreren Tabs: (`kruFormWizard`, beispiel "Datenpunkt bearbeiten")
+Detail-Ansicht von Maßnahme öffnet sich auf einer eigenen Seite. Diese wird mithilfe von Tabs unterteilt in vier Bereiche:
 
  1. Basisdaten
  2. Bearbeitungsprotokoll
  3. Energieeffizienz
  4. Wirtschaftlichkeit
 
+Eingabefelder werden mithilfe der Komponente `DisplayBox` gruppiert und zunächst als Read-Only präsentiert, um versehentliche Eingaben zu vermeiden. Benutzer mit Schreibberechtigung können mit einem Klick auf ein Schraubenschlüssel-Symbol in einem eigenen Pop-up bearbeiten, und anschließend mit einem Klick auf "Speichern" die Änderungen bestätigen. (Als Referenzpunkt siehe *enerchart* bereich Administration -> Netzwerkeinstellungen -> LAN-Einstellung)
+
 Je nach Status der Maßnahme sind verschiedene Felder required oder ggf. Read-only.
-Rechts vom Dialog-Popup werden über das ExtraActions Panel wichtige Aktionen wie der Statuswechsel angeboten.
+
+Anforderung: Entwicklung von Tab-Navigation.
 
  ## 2.2 Basisdaten
 
  ![Maßnahme Basisdaten Dialog](Img/MaßnahmeDialog.png)
-Anforderung: Möglichkeit Dateien hochzuladen bzw. aus bereits hochgeladenen Dateien auszuwählen
 
 ## 2.3 Bearbeitungsprotokoll
 Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird als Teil jeder Maßnahme ein chronologisches Bearbeitungsprotokoll geführt. Dieses besteht zum einen Teil aus automatisch generierten Einträgen, welche beispielsweise Zustandsänderungen vermerken, und zum anderen Teil aus manuell geschriebenen Einträgen von Mitarbeitern.
