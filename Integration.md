@@ -88,7 +88,7 @@ In *enerchart* wird nun ein Managementsystem integriert, welches eine digitale B
 
 Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen- und Kachelansicht. Bei einer leeren Liste wird stattdessen eine Erläuterung/Hilfetext angezeigt.
 
-## 2.1 Neue Datenstruktur "Effizienzmaßnahme":
+## 2.1. Neue Datenstruktur "Effizienzmaßnahme":
 
 |Spalte|Typ|Notiz|Sichtbarkeit in Übersicht
 |---|---|---|---|
@@ -111,6 +111,8 @@ Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen
 |VALERI-Eingabefelder|Ganz viele floats...|Siehe VALERI-Rechnung in ESB|❌|
 ||||
 
+## 2.2. Detailansicht von Maßnahmen
+
 Detail-Ansicht von Maßnahme öffnet sich auf einer eigenen Seite. Diese wird mithilfe von Tabs unterteilt in vier Bereiche:
 
  1. Basisdaten
@@ -118,17 +120,17 @@ Detail-Ansicht von Maßnahme öffnet sich auf einer eigenen Seite. Diese wird mi
  3. Energieeffizienz
  4. Wirtschaftlichkeit
 
-Eingabefelder werden mithilfe der Komponente `DisplayBox` gruppiert und zunächst als Read-Only präsentiert, um versehentliche Eingaben zu vermeiden. Benutzer mit Schreibberechtigung können mit einem Klick auf ein Schraubenschlüssel-Symbol in einem eigenen Pop-up bearbeiten, und anschließend mit einem Klick auf "Speichern" die Änderungen bestätigen. (Als Referenzpunkt siehe *enerchart* bereich Administration -> Netzwerkeinstellungen -> LAN-Einstellung)
+Eingabefelder werden mithilfe der Komponente `DisplayBox` grupiert und zunächst als Read-Only präsentiert, um versehentliche Eingaben zu vermeiden. Benutzer mit Schreibberechtigung können mit einem Klick auf ein Schraubenschlüssel-Symbol in einem eigenen Pop-up bearbeiten, und anschließend mit einem Klick auf "Speichern" die Änderungen bestätigen. (Als Referenzpunkt siehe *enerchart* bereich Administration -> Netzwerkeinstellungen -> LAN-Einstellung)
 
 Je nach Status der Maßnahme sind verschiedene Felder required oder ggf. Read-only.
 
 Anforderung: Entwicklung von Tab-Navigation.
 
- ## 2.2 Basisdaten
+### 2.2.1. Basisdaten
 
  ![Maßnahme Basisdaten Dialog](Img/MaßnahmeDialog.png)
 
-## 2.3 Bearbeitungsprotokoll
+### 2.2.2. Bearbeitungsprotokoll
 Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird als Teil jeder Maßnahme ein chronologisches Bearbeitungsprotokoll geführt. Dieses besteht zum einen Teil aus automatisch generierten Einträgen, welche beispielsweise Zustandsänderungen vermerken, und zum anderen Teil aus manuell geschriebenen Einträgen von Mitarbeitern.
 
 ![Bearbeitungsprotokoll Bild](Img/MaßnahmeDialog2.png)
@@ -139,7 +141,7 @@ Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird
 * Chronologisches Protokoll bestehend aus von manuell erstellten Einträgen von Nutzern sowie automatisch generierten Einträgen (ausgelöst von Zustandänderungen)
     * Benötigt neue Datenstruktur Protokolleintrag (1:n Verhältniss von Effizienzmaßnahmen zu Protokolleintrag)
 
-### 2.3.1. Neue Datenstruktur "Protokolleintrag"
+### 2.2.2.1. Neue Datenstruktur "Protokolleintrag"
 |Spalte|Typ|Notiz|
 |---|---|---|
 |id|`integer`|Primärschlüssel|
@@ -149,12 +151,12 @@ Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird
 |Verfassungsdatum|`Date`||
 ||||
 
-### 2.3.2. Ausbaumöglichkeiten:
+### 2.2.2.2. Ausbaumöglichkeiten:
 * Abgeschätzter Gesamtfortschritt, visualisiert als Fortschrittsbalken. Bei Erstellung eines neuen Protokolleintrags kann die Schätzung geändert werden.
 * Dokumente/Fotos an Protokolleintrag hängen.
 
 
-## 2.4. Energieeffizienz
+### 2.2.3. Energieeffizienz
 Der Reiter Energieeffizienz dient als Kalkulationshilfe um die monetäre Einsparung einer Maßnahme zu schätzen. Der Nutzer gibt an, wie viel von welchen Energieträgern eingespart wird, und basierend darauf wird ein Gesamtjahreswert von Euro und CO2 berechnet. Dieser Gesamtwert kann anschließend im Tab "Wirtschaftlichkeit" verwendet werden, um die Wirtschaftlichkeit der Maßnahme zu bewerten.
 
 Um diese Funktionalität zu verwenden muss der Benutzer zunächst auswählen, welche Energieträger von einer Maßnahme betroffen ist. Über einen Button wird ein separates Pop-up ausgelöst, in welchem der Nutzer aus einer Liste von allen aktiven Energieträgern im System auswählen kann.
@@ -165,7 +167,7 @@ Die gewählten Energieträger erscheinen dann als Liste im Hauptfenster, und der
 
 Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entweder als eigene Datenbanktabelle oder als JSON-String innerhalb der Datenstruktur Effizienzmaßnahmen
 
-### 2.4.1. Neue Datenstruktur "Energieersparniss"
+### 2.2.3.1. Neue Datenstruktur "Energieersparniss"
 |Spalte|Typ|Notiz|
 |---|---|---|
 |id|`integer`|Primärschlüssel|
@@ -174,7 +176,7 @@ Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entw
 |Einsparung|`float`|Einheit abhängig vom Energieträger; Eurowert wird berechnet
 |||
 
-## 2.5. Wirtschaftlichkeit
+### 2.2.4. Wirtschaftlichkeit
 Ein wichtiger Teil einer Maßnahmen ist die Möglichkeit, ihre wirtschaftliche Rentabilität zu beurteilen. Die Norm DIN 17463 dient als Leitfaden, um energiebezogene Investitionen systematisch und transparent zu bewerten. Teil dieser Norm ist die VALERI Rechnung (Valuation of Energyy Related Investments), eine erweiterte Version der Kapitalwertmethode. Die Formel erlaubt es, den heutigen Kapitalwert einer Investition zu berechnen, unter Berücksichtigung von Abzinsung von zukünftigen Erfolgen.
 
 Ein wichtiger Teil der VALERI-Rechnung ist der erwartete Betrag, der durch die Maßnahme jährlich eingespart wird. Dieser Wert kann der Benutzer entweder mit Hilfe des Tabs "Energieeffizienz" basierend auf Energieträgerverbrauch abschätzen, oder alternativ als fester Wert direkt eingegeben werden.
@@ -188,7 +190,7 @@ Für alle weiteren Eingabefelder dient Energiesparbericht.de als Vorlage. Auch d
     * Benötigt neue Datenstruktur Zusatzfaktoren (1:n verhältniss von Effizienzmaßnahmen zu Zusatzfaktoren)
 * Ausgabe der Ergebnisse wie in ESB, inklusive Cashflow-Tabelle
 
-### 2.5.1. Neue Datenstruktur "Zusatzfaktor"
+### 2.2.4.1. Neue Datenstruktur "Zusatzfaktor"
 |Spalte|Typ|Notiz|
 |---|---|---|
 |id|`integer`|Primärschlüssel|
@@ -203,7 +205,7 @@ Für alle weiteren Eingabefelder dient Energiesparbericht.de als Vorlage. Auch d
 
 (TODO Bild)
 
-#### Ausbaumöglichkeit
+### 2.2.4.2. Ausbaumöglichkeit
 * Graph-Darstellung des Cashflows; benötigt Komponente um Graph zu Rendern.
 
 ## 3. Notizen
