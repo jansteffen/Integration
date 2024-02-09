@@ -86,9 +86,14 @@ Solche Maßnahmen können vielfältig sein und beispielsweise die Verbesserung v
 
 In *enerchart* wird nun ein Managementsystem integriert, welches eine digitale Buchhaltung von Effizienzmaßnahmen ermöglicht. Der neue Menüpunkt "Effizienzmaßnahmen" führt zu einer Übersicht von Effizienzmaßnahmen, mit denen der eingeloggte Benutzer verbunden ist. Dadurch bildet sich eine Art "To-Do Liste", welche dem Benutzer alle für ihn anstehenden Aufgaben auf einen Blick überschaubar dargestellt werden. Für eine umfassendere Übersicht kann der Nutzer auch auf eine Ansicht wechseln, welche alle Maßnahmen anzeigt, unabhängig davon ob er selbst damit verbunden ist oder nicht.
 
-Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen- und Kachelansicht. Bei einer leeren Liste wird stattdessen eine Erläuterung/Hilfetext angezeigt.
+Eine Maßnahme hat immer einen Zustand und beginnt ihren Lebenszyklus im Zustand "Entwurf". Je nach Zustand müssen mehr und mehr Eingabefelder pflichtmäßig ausgefüllt werden, bevor Benutzer die Maßnahme in den nächsten Zustand überführen können. Außerdem können nach einem Zustandsübergang bestimmte Felder Read-Only werden.
+
+![Zustandsdiagram von Maßnahmen](Img/Maßnahme_Zustandsdiagram.png)
+
 
 ## 2.1. Neue Datenstruktur "Effizienzmaßnahme":
+
+Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen- und Kachelansicht. Bei einer leeren Liste wird stattdessen eine Erläuterung/Hilfetext angezeigt.
 
 |Spalte|Typ|Notiz|Sichtbarkeit in Übersicht
 |---|---|---|---|
@@ -96,7 +101,7 @@ Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen
 |Name|`String`|Anzeigename|✅|
 |Beschreibung|`String`||❌|
 |Rubrik|`Enum`|Rein Organisatorisch, siehe ESB Rubriken|❔|
-|Status|`Enum`|Entwurf, Planung, Warten auf Umsetzung, In Umsetzung, Kontrolle, Abgeschlossen|✅|
+|Status|`Enum`|Entwurf, Planung, Umsetzung, Kontrolle, Abgeschlossen, Abgebrochen|✅|
 |Priorität|`Enum`|Hoch, Mittel, Niedrig|✅|
 |Zuständiger Bearbeiter|Verweis Mitarbeiter|n:1|✅|
 |Zuständiger Kontrolleur|Verweis Mitarbeiter|n:1|❔|
@@ -108,6 +113,7 @@ Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen
 |Verbundene Datenpunkte|Verweis Datenpunkte|n:m|❌|
 |Verbundene Dokumente|Verweis Dokumente|n:m|❌|
 |Bild|Verweis Bilddatei|n:1|✅ (nur in Kachelansicht)|
+|Audit-Relevant|boolean||❔|
 |VALERI-Eingabefelder|Ganz viele floats...|Siehe VALERI-Rechnung in ESB|❌|
 ||||
 
@@ -120,20 +126,21 @@ Detail-Ansicht von Maßnahme öffnet sich auf einer eigenen Seite. Diese wird mi
  3. Energieeffizienz
  4. Wirtschaftlichkeit
 
-Eingabefelder werden mithilfe der Komponente `DisplayBox` grupiert und zunächst als Read-Only präsentiert, um versehentliche Eingaben zu vermeiden. Benutzer mit Schreibberechtigung können mit einem Klick auf ein Schraubenschlüssel-Symbol in einem eigenen Pop-up bearbeiten, und anschließend mit einem Klick auf "Speichern" die Änderungen bestätigen. (Als Referenzpunkt siehe *enerchart* bereich Administration -> Netzwerkeinstellungen -> LAN-Einstellung)
+Eingabefelder werden mithilfe der Komponente `DisplayBox` gruppiert und zunächst als Read-Only präsentiert, um versehentliche Eingaben zu vermeiden. Benutzer mit Schreibberechtigung können mit einem Klick auf ein Schraubenschlüssel-Symbol einen standard Pop-up-Dialog öffnen um die Informationen zu bearbeiten, und anschließend mit einem Klick auf "Speichern" die Änderungen bestätigen. (Als Referenzpunkt siehe *enerchart* bereich Administration -> Netzwerkeinstellungen -> LAN-Einstellung)
 
 Je nach Status der Maßnahme sind verschiedene Felder required oder ggf. Read-only.
 
 Anforderung: Entwicklung von Tab-Navigation.
 
 ### 2.2.1. Basisdaten
+Die Detailansicht einer Maßnahme öffnet sich standardmäßig auf dem Tab "Basisdaten" Dieser sammelt wichtige grundlegende Informationen über die Maßnahme selbst, sowie organisatorische Daten für die Zuständigkeit.
 
- ![Maßnahme Basisdaten Dialog](Img/MaßnahmeDialog.png)
+ ![Maßnahme Basisdaten Ansicht](Img/Detailansicht.png)
 
 ### 2.2.2. Bearbeitungsprotokoll
 Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird als Teil jeder Maßnahme ein chronologisches Bearbeitungsprotokoll geführt. Dieses besteht zum einen Teil aus automatisch generierten Einträgen, welche beispielsweise Zustandsänderungen vermerken, und zum anderen Teil aus manuell geschriebenen Einträgen von Mitarbeitern.
 
-![Bearbeitungsprotokoll Bild](Img/MaßnahmeDialog2.png)
+![Bearbeitungsprotokoll Bild](Img/Detailansicht2.png)
 
 * Eingabeformular für neuen Protokolleintrag:
     * Großes Textfeld
@@ -157,13 +164,15 @@ Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird
 
 
 ### 2.2.3. Energieeffizienz
-Der Reiter Energieeffizienz dient als Kalkulationshilfe um die monetäre Einsparung einer Maßnahme zu schätzen. Der Nutzer gibt an, wie viel von welchen Energieträgern eingespart wird, und basierend darauf wird ein Gesamtjahreswert von Euro und CO2 berechnet. Dieser Gesamtwert kann anschließend im Tab "Wirtschaftlichkeit" verwendet werden, um die Wirtschaftlichkeit der Maßnahme zu bewerten.
+Der Reiter Energieeffizienz dient als Kalkulationshilfe um die monetäre Einsparung einer Maßnahme zu schätzen. Der Nutzer gibt an, wie viel von welchen Energieträgern nach Prognose eingespart wird, und basierend darauf wird ein Gesamtjahreswert von Euro und CO2 berechnet. Dieser Gesamtwert kann anschließend im Tab "Wirtschaftlichkeit" verwendet werden, um die Wirtschaftlichkeit der Maßnahme zu bewerten.
 
 Um diese Funktionalität zu verwenden muss der Benutzer zunächst auswählen, welche Energieträger von einer Maßnahme betroffen ist. Über einen Button wird ein separates Pop-up ausgelöst, in welchem der Nutzer aus einer Liste von allen aktiven Energieträgern im System auswählen kann.
 
 Die gewählten Energieträger erscheinen dann als Liste im Hauptfenster, und der Nutzer kann für jeden Energieträger individuell eine erwartete Einsparung eintragen. Mithilfe der in den Energieträgern hinterlegten Werten werden daraus Jahreswerte für CO2- und Euroeinsparung berechnet, und anschließend aufsummiert.
 
-![Tab Energieeffizienz](Img/MaßnahmeDialog3.png)
+Außerdem wird der Benutzer aufgefordert, für die prognostizierten Werte eine Rechtfertigung zu hinterlegen, wie diese Werte zustande gekommen sind. Dazu kann ein Textfeld befüllt und/oder Dokumente hochgeladen werden.
+
+![Tab Energieeffizienz](Img/Detailansicht3.png)
 
 Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entweder als eigene Datenbanktabelle oder als JSON-String innerhalb der Datenstruktur Effizienzmaßnahmen
 
@@ -202,8 +211,6 @@ Für alle weiteren Eingabefelder dient Energiesparbericht.de als Vorlage. Auch d
 |Periode|`integer`||
 |Stop nach wievielen Jahren|`integer`||
 |||
-
-(TODO Bild)
 
 ### 2.2.4.2. Ausbaumöglichkeit
 * Graph-Darstellung des Cashflows; benötigt Komponente um Graph zu Rendern.
