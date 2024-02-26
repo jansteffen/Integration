@@ -1,11 +1,11 @@
 # Integrationskonzept für Effizienzmaßnahmen enerchart
-Nachdem ein umfassendes Funktionskonzept erarbeitet wurde, muss nun ein Plan geschaffen werden, wie diese Funktionen am besten in die bereits bestehenden Software eingebaut werden können. Dabei sollten möglichst viele Bestandskomponenten, sowohl im Front-End als auch im Back-End, sinnvoll wiederverwendet werden. So wird nicht nur der Entwicklungsaufwand minimiert, sondern die Bedienung und das Aussehen für den Benutzer werden dadurch Konform mit anderen Teilen der Software.
+Nachdem ein umfassendes Funktionskonzept erarbeitet wurde, muss nun ein Plan geschaffen werden, wie diese Funktionen am besten in die bereits bestehenden Software eingebaut werden können. Dabei sollten möglichst viele Bestandskomponenten, sowohl im Frontend als auch im Backend, sinnvoll wiederverwendet werden. So wird nicht nur der Entwicklungsaufwand minimiert, sondern die Bedienung und das Aussehen für den Benutzer werden dadurch konform mit anderen Teilen der Software.
 
 
 ## Neue/Geänderte Funktionsbereiche
 Die Integration betrifft insgesamt drei Funktionsbereiche von *enerchart*, die jeweils über das Hauptmenü an der linken Seite des Bildschirms erreicht werden können. 
 
-Unter den drei betroffenen Bereichen sind Zwei völlig neu und ein bereits bestehender Bereich:
+Unter den drei betroffenen Bereichen sind zwei völlig neu und ein bereits bestehender Bereich:
 
 ![MenüScreenshots](Img/MenüScreenshot.png)
 
@@ -14,15 +14,15 @@ Unter den drei betroffenen Bereichen sind Zwei völlig neu und ein bereits beste
 2. *Neu*: Effizienzmaßnahmen
 3. "Maßnahmen und Notizen" umgewidmet zu "Notizen"
 
-Der Zugang zu Funktionsbereichen und die Sichtbarkeit der Menüeinträge kann an Berechtigungen eines Nutzers gekoppelt werden. Das bedeutet, dass die Menüpunkte nur sichtbar werden, wenn der aktuelle Nutzer dauch dazu berechtigt ist, diesen Funktionsbereich zu verwenden.
+Der Zugang zu Funktionsbereichen und die Sichtbarkeit der Menüeinträge kann an Berechtigungen eines Nutzers gekoppelt werden. Das bedeutet, dass die Menüpunkte nur sichtbar werden, wenn der aktuelle Nutzer auch dazu berechtigt ist, diesen Funktionsbereich zu verwenden.
 
-In der Benutzerverwaltung von *enerchart* werden Berechtigungen allerdings nicht pro Benutzer verteilt, sonder pro Benutzerrolle. Benutzerrollen dienen dazu, mehrere Benutzer zu Gruppieren.
+In der Benutzerverwaltung von *enerchart* werden Berechtigungen allerdings nicht pro Benutzer verteilt, sondern pro Benutzerrolle. Benutzerrollen dienen dazu, mehrere Benutzer zu gruppieren.
 
 Für die beiden neuen Funktionsbereiche sollen jeweils separate Berechtigungen für Lesen und Schreiben angelegt werden, also insgesamt vier neue Berechtigungen. Berechtigungen werden deklariert in der Datei `module/User/src/User/Rbac/Permissions.php`
 
 # 1. Energieträger
 
-Im Allgemeinen versteht man unter "Energieträger" ein Medium für Energie, also beispielsweise Strom, Öl oder Gas. Da diese unterschiedliche Eigenschaften wie Preis, CO2-Ausstoß und Brennwert aufweisen, soll nun in enerchart eine neue Datenstruktur eingeführt werden, welche diese Eigenschaften logisch bündelt.
+Im Allgemeinen versteht man unter "Energieträger" ein Medium für Energie, also beispielsweise Strom, Öl oder Gas. Da diese unterschiedlichen Eigenschaften wie Preis, CO2-Ausstoß und Brennwert aufweisen, soll nun in enerchart eine neue Datenstruktur eingeführt werden, welche diese Eigenschaften logisch bündelt.
 
 Die Benutzer müssen dazu im System eine Liste ihrer aktiv verwendeten Energieträgern anlegen und diese mit Werten versehen. Es ist außerdem möglich, ein Energieträgermedium, z.B. Storm, mehrfach hinzuzufügen, und mit unterschiedlichen Werten zu versehen. Dadurch kann das Kaufen von Strom von mehreren Anbietern modelliert werden.
 
@@ -36,7 +36,7 @@ Anforderung:
 * Jeder Energieträger benötigt ein Icon
 
 ## 1.1. Datenstruktur für Energieträger
-In der Datenbank muss einene neue Datenstruktur angelegt werden, um Energieträger zu führen:
+In der Datenbank muss eine neue Datenstruktur angelegt werden, um Energieträger zu führen:
 
 |Spalte|Typ|Notiz|Sichtbarkeit in Übersicht|
 |---|---|---|---|
@@ -58,9 +58,9 @@ In der Datenbank muss einene neue Datenstruktur angelegt werden, um Energieträg
 ✅ = Immer Sichtbar     
 ❔ = Optional
 
-Für Preisentwicklung, CO2-Ausstoß und Brennwert werden im Hintergrund für den Benutzer nicht sichtbare Datenpunkte angelegt und verwendet. Die Werte dafür können entweder manuell vom Benutzer direnkt eingegeben werden, oder von einem anderen ausgewählten Datenpunkt vom gleichen Typ bezogen werden.
+Für Preisentwicklung, CO2-Ausstoß und Brennwert werden im Hintergrund für den Benutzer nicht sichtbare Datenpunkte angelegt und verwendet. Die Werte dafür können entweder manuell vom Benutzer direkt eingegeben werden, oder von einem anderen ausgewählten Datenpunkt vom gleichen Typ bezogen werden.
 
-## 1.2. Pop-Up Dialog "neuen Energieträger anlegen"
+## 1.2. Pop-up Dialog "neuen Energieträger anlegen"
 
 Der Nutzer kann einen neuen Eintrag in die Liste der Energieträger erstellen über die Schaltfläche "Hinzufügen" in der Aktionsleiste, welche über der Tabelle bzw. Kachelansicht sitzt. Dazu wird die enerchart Komponente `kruFormWizard` und dazugehörige `kruForm`-Elemente verwendet, mit denen ein Pop-up-Dialog erstellt und mit standardisierten Eingabeformular-Elementen befüllt werden kann. Der Dialog soll folgende Elemente aufweisen:
 
@@ -69,14 +69,14 @@ Der Nutzer kann einen neuen Eintrag in die Liste der Energieträger erstellen ü
 3. Aktiv (Checkbox, standardmäßig true)
 3. Preis, kann über zwei Möglichkeiten angegeben werden:
     1. Direkt eingegebener Wert (Nummernfeld mit angezeigter Einheit Währung, Wert muss positiv sein)
-    2. Beziehen der Werte von einem anderen Datenpunkt (vom Typ Wärung)
-4. CO2-Ausstoß, zwei Möglichkeiten (Wie Preis, nur mit CO2 als Typ)
+    2. Beziehen der Werte von einem anderen Datenpunkt (vom Typ Währung)
+4. CO2-Ausstoß, zwei Möglichkeiten (Wie Preis, nur mit CO₂ als Typ)
 5. Brennwert, zwei Möglichkeiten (Wie Preis, nur mit kWh als Typ)
 
 ## 1.3. Pop-Up Dialog "Energieträger Bearbeiten"
 
 Ein Energieträger kann bearbeitet werden, beispielsweise um ihn umzubenennen oder mit neuen Werten zu versehen.
-Dazu wird auch wieder ein Pop-up Dialog verwendet, ähnlich wie "Energieträger anlegen", mit dem Unterschied das der Energieträgermedium nicht mehr geändert werden kann. Weiterhin gibt es einen "Löschen"-Button, allerdings ist das Löschen nur möglich wenn der Energieträger in keiner Maßnahme verwendet wird.
+Dazu wird auch wieder ein Pop-up Dialog verwendet, ähnlich wie "Energieträger anlegen", mit dem Unterschied, dass das Energieträgermedium nicht mehr geändert werden kann. Weiterhin gibt es einen "Löschen"-Button, allerdings ist das Löschen nur möglich, wenn der Energieträger in keiner Maßnahme verwendet wird.
 
 # 2. Effizienzmaßnahmen
 
@@ -84,11 +84,11 @@ Eine Energieeffizienzmaßnahme im Kontext der ISO-50001 bezieht sich auf eine ge
 
 Solche Maßnahmen können vielfältig sein und beispielsweise die Verbesserung von Produktionsprozessen, den Einsatz energieeffizienterer Technologien, die Optimierung von Gebäudeenergiesystemen oder die Schulung von Mitarbeitern zu bewusstem Energieverbrauch umfassen. Das Ziel besteht darin, den Energieverbrauch zu reduzieren, Kosten zu senken, Umweltauswirkungen zu minimieren und insgesamt die betriebliche Energieleistung zu optimieren.
 
-In *enerchart* wird nun ein Managementsystem integriert, welches eine digitale Buchhaltung von Effizienzmaßnahmen ermöglicht. Der neue Menüpunkt "Effizienzmaßnahmen" führt zu einer Übersicht von Effizienzmaßnahmen, mit denen der eingeloggte Benutzer verbunden ist. Dadurch bildet sich eine Art "To-Do Liste", welche dem Benutzer alle für ihn anstehenden Aufgaben auf einen Blick überschaubar dargestellt werden. Für eine umfassendere Übersicht kann der Nutzer auch auf eine Ansicht wechseln, welche alle Maßnahmen anzeigt, unabhängig davon ob er selbst damit verbunden ist oder nicht.
+In *enerchart* wird nun ein Managementsystem integriert, welches eine digitale Buchhaltung von Effizienzmaßnahmen ermöglicht. Der neue Menüpunkt "Effizienzmaßnahmen" führt zu einer Übersicht von Effizienzmaßnahmen, mit denen der eingeloggte Benutzer verbunden ist. Dadurch bildet sich eine Art "To-do-Liste", welche dem Benutzer alle für ihn anstehenden Aufgaben auf einen Blick überschaubar dargestellt werden. Für eine umfassendere Übersicht kann der Nutzer auch auf eine Ansicht wechseln, welche alle Maßnahmen anzeigt, unabhängig davon, ob er selbst damit verbunden ist oder nicht.
 
-Eine Maßnahme hat immer einen Zustand und beginnt ihren Lebenszyklus im Zustand "Entwurf". Je nach Zustand müssen mehr und mehr Eingabefelder pflichtmäßig ausgefüllt werden, bevor Benutzer die Maßnahme in den nächsten Zustand überführen können. Außerdem können nach einem Zustandsübergang bestimmte Felder Read-Only werden.
+Eine Maßnahme hat immer einen Zustand und beginnt ihren Lebenszyklus im Zustand "Entwurf". Je nach Zustand müssen mehr und mehr Eingabefelder pflichtmäßig ausgefüllt werden, bevor Benutzer die Maßnahme in den nächsten Zustand überführen können. Außerdem können nach einem Zustandsübergang bestimmte Felder Read-only werden.
 
-![Zustandsdiagram von Maßnahmen](Img/Maßnahme_Zustandsdiagram.png)
+![Zustandsdiagramm von Maßnahmen](Img/Maßnahme_Zustandsdiagram.png)
 
 
 ## 2.1. Neue Datenstruktur "Effizienzmaßnahme":
@@ -100,7 +100,7 @@ Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen
 |id|`integer`|Primärschlüssel|❌|
 |Name|`String`|Anzeigename|✅|
 |Beschreibung|`String`||❌|
-|Rubrik|`Enum`|Rein Organisatorisch, siehe ESB Rubriken|❔|
+|Rubrik|`Enum`|Rein organisatorisch, siehe ESB Rubriken|❔|
 |Status|`Enum`|Entwurf, Planung, Umsetzung, Kontrolle, Abgeschlossen, Abgebrochen|✅|
 |Priorität|`Enum`|Hoch, Mittel, Niedrig|✅|
 |Zuständiger Bearbeiter|Verweis Mitarbeiter|n:1|✅|
@@ -109,7 +109,7 @@ Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen
 |Benachrichtigungsgruppe|Verweis Benachrichtigungsgruppe|n:1|❌|
 |Datum der Realisierung|`Date`||✅|
 |Letzte Änderung|`Date`|Wert wird automatisch befüllt|❔|
-|Erstellt Am|`Date`|Wert wird automatisch befüllt|❔|
+|Erstellt am|`Date`|Wert wird automatisch befüllt|❔|
 |Verbundene Datenpunkte|Verweis Datenpunkte|n:m|❌|
 |Verbundene Dokumente|Verweis Dokumente|n:m|❌|
 |Bild|Verweis Bilddatei|n:1|✅ (nur in Kachelansicht)|
@@ -119,14 +119,14 @@ Die Darstellung wird auch wieder mittels AG-Grid realisiert, mit sowohl Tabellen
 
 ## 2.2. Detailansicht von Maßnahmen
 
-Detail-Ansicht von Maßnahme öffnet sich auf einer eigenen Seite. Diese wird mithilfe von Tabs unterteilt in vier Bereiche:
+Detailansicht von Maßnahme öffnet sich auf einer eigenen Seite. Diese wird mithilfe von Tabs unterteilt in vier Bereiche:
 
  1. Basisdaten
  2. Bearbeitungsprotokoll
  3. Energieeffizienz
  4. Wirtschaftlichkeit
 
-Eingabefelder werden mithilfe der Komponente `DisplayBox` gruppiert und zunächst als Read-Only präsentiert, um versehentliche Eingaben zu vermeiden. Benutzer mit Schreibberechtigung können mit einem Klick auf ein Schraubenschlüssel-Symbol einen standard Pop-up-Dialog öffnen um die Informationen zu bearbeiten, und anschließend mit einem Klick auf "Speichern" die Änderungen bestätigen. (Als Referenzpunkt siehe *enerchart* bereich Administration -> Netzwerkeinstellungen -> LAN-Einstellung)
+Eingabefelder werden mithilfe der Komponente `DisplayBox` gruppiert und zunächst als Read-only präsentiert, um versehentliche Eingaben zu vermeiden. Benutzer mit Schreibberechtigung können mit einem Klick auf ein Schraubenschlüssel-Symbol einen Standard Pop-up-Dialog öffnen, um die Informationen zu bearbeiten, und anschließend mit einem Klick auf "Speichern" die Änderungen bestätigen. (Als Referenzpunkt siehe *enerchart* Bereich Administration → Netzwerkeinstellungen → LAN-Einstellung)
 
 Je nach Status der Maßnahme sind verschiedene Felder required oder ggf. Read-only.
 
@@ -134,6 +134,18 @@ Anforderung: Entwicklung von Tab-Navigation.
 
 ### 2.2.1. Basisdaten
 Die Detailansicht einer Maßnahme öffnet sich standardmäßig auf dem Tab "Basisdaten" Dieser sammelt wichtige grundlegende Informationen über die Maßnahme selbst, sowie organisatorische Daten für die Zuständigkeit.
+
+Die erste `DisplayBox` gruppiert Name, Beschreibung und Titelbild der Maßnahme. Das Titelbild wird auch in der Kachelansicht der Übersichtsseite verwendet.
+
+Die zweite `DisplayBox` sammelt organisatorische Daten (siehe Abbildung)
+
+Die dritte `DisplayBox` sammelt Daten, die mit der Maßnahme in Verbindung stehen, insbesondere:
+
+1. Dokumente
+2. Datenpunkte
+3. Bilder
+
+Wenn der Benutzer mit dem Schraubenschlüsselicon den Bearbeiten-Dialog öffnet, gibt es für die Datenpunkte noch eine Checkbox mit der ein- oder ausgeschaltet werden kann, dass bei allen verbundenen Datenpunkten automatisch eine Notiz erstellt wird, wenn die Effizienzmaßnahme in und aus dem Zustand „Umsetzung“ wechselt
 
  ![Maßnahme Basisdaten Ansicht](Img/Detailansicht.png)
 
@@ -145,8 +157,8 @@ Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird
 * Eingabeformular für neuen Protokolleintrag:
     * Großes Textfeld
     * Speichern-Button
-* Chronologisches Protokoll bestehend aus von manuell erstellten Einträgen von Nutzern sowie automatisch generierten Einträgen (ausgelöst von Zustandänderungen)
-    * Benötigt neue Datenstruktur Protokolleintrag (1:n Verhältniss von Effizienzmaßnahmen zu Protokolleintrag)
+* Chronologisches Protokoll bestehend aus von manuell erstellten Einträgen von Nutzern sowie automatisch generierten Einträgen (ausgelöst von Zustandsänderungen)
+    * Benötigt neue Datenstruktur Protokolleintrag (1:n Verhältnis von Effizienzmaßnahmen zu Protokolleintrag)
 
 ### 2.2.2.1. Neue Datenstruktur "Protokolleintrag"
 |Spalte|Typ|Notiz|
@@ -159,14 +171,14 @@ Damit der Lebenslauf einer Maßnahme auch rückwirkend nachvollziehbar ist, wird
 ||||
 
 ### 2.2.2.2. Ausbaumöglichkeiten:
-* Abgeschätzter Gesamtfortschritt, visualisiert als Fortschrittsbalken. Bei Erstellung eines neuen Protokolleintrags kann die Schätzung geändert werden.
+* Abgeschätzter Gesamtfortschritt visualisiert als Fortschrittsbalken. Bei Erstellung eines neuen Protokolleintrags kann die Schätzung geändert werden.
 * Dokumente/Fotos an Protokolleintrag hängen.
 
 
 ### 2.2.3. Energieeffizienz
-Der Reiter Energieeffizienz dient als Kalkulationshilfe um die monetäre Einsparung einer Maßnahme zu schätzen. Der Nutzer gibt an, wie viel von welchen Energieträgern nach Prognose eingespart wird, und basierend darauf wird ein Gesamtjahreswert von Euro und CO2 berechnet. Dieser Gesamtwert kann anschließend im Tab "Wirtschaftlichkeit" verwendet werden, um die Wirtschaftlichkeit der Maßnahme zu bewerten.
+Der Reiter Energieeffizienz dient als Kalkulationshilfe um die monetäre Einsparung einer Maßnahme zu schätzen. Der Nutzer gibt an, wie viel von welchen Energieträgern nach Prognose eingespart wird, und basierend darauf wird ein Gesamtjahreswert von Euro und CO₂ berechnet. Dieser Gesamtwert kann anschließend im Tab "Wirtschaftlichkeit" verwendet werden, um die Wirtschaftlichkeit der Maßnahme zu bewerten.
 
-Um diese Funktionalität zu verwenden muss der Benutzer zunächst auswählen, welche Energieträger von einer Maßnahme betroffen ist. Über einen Button wird ein separates Pop-up ausgelöst, in welchem der Nutzer aus einer Liste von allen aktiven Energieträgern im System auswählen kann.
+Um diese Funktionalität zu verwenden, muss der Benutzer zunächst auswählen, welche Energieträger von einer Maßnahme betroffen ist. Über einen Button wird ein separates Pop-up ausgelöst, in welchem der Nutzer aus einer Liste von allen aktiven Energieträgern im System auswählen kann.
 
 Die gewählten Energieträger erscheinen dann als Liste im Hauptfenster, und der Nutzer kann für jeden Energieträger individuell eine erwartete Einsparung eintragen. Mithilfe der in den Energieträgern hinterlegten Werten werden daraus Jahreswerte für CO2- und Euroeinsparung berechnet, und anschließend aufsummiert.
 
@@ -176,7 +188,7 @@ Außerdem wird der Benutzer aufgefordert, für die prognostizierten Werte eine R
 
 Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entweder als eigene Datenbanktabelle oder als JSON-String innerhalb der Datenstruktur Effizienzmaßnahmen
 
-### 2.2.3.1. Neue Datenstruktur "Energieersparniss"
+### 2.2.3.1. Neue Datenstruktur "Energieersparnis"
 |Spalte|Typ|Notiz|
 |---|---|---|
 |id|`integer`|Primärschlüssel|
@@ -186,17 +198,17 @@ Die Einträge für Ersparnisse werden als eigene Datenstruktur gespeichert, entw
 |||
 
 ### 2.2.4. Wirtschaftlichkeit
-Ein wichtiger Teil einer Maßnahmen ist die Möglichkeit, ihre wirtschaftliche Rentabilität zu beurteilen. Die Norm DIN 17463 dient als Leitfaden, um energiebezogene Investitionen systematisch und transparent zu bewerten. Teil dieser Norm ist die VALERI Rechnung (Valuation of Energyy Related Investments), eine erweiterte Version der Kapitalwertmethode. Die Formel erlaubt es, den heutigen Kapitalwert einer Investition zu berechnen, unter Berücksichtigung von Abzinsung von zukünftigen Erfolgen.
+Ein wichtiger Teil einer Maßnahme ist die Möglichkeit, ihre wirtschaftliche Rentabilität zu beurteilen. Die Norm DIN 17463 dient als Leitfaden, um energiebezogene Investitionen systematisch und transparent zu bewerten. Teil dieser Norm ist die VALERI Rechnung (Valuation of Energyy Related Investments), eine erweiterte Version der Kapitalwertmethode. Die Formel erlaubt es, den heutigen Kapitalwert einer Investition zu berechnen, unter Berücksichtigung von Abzinsung von zukünftigen Erfolgen.
 
-Ein wichtiger Teil der VALERI-Rechnung ist der erwartete Betrag, der durch die Maßnahme jährlich eingespart wird. Dieser Wert kann der Benutzer entweder mit Hilfe des Tabs "Energieeffizienz" basierend auf Energieträgerverbrauch abschätzen, oder alternativ als fester Wert direkt eingegeben werden.
+Ein wichtiger Teil der VALERI-Rechnung ist der erwartete Betrag, der durch die Maßnahme jährlich eingespart wird. Dieser Wert kann der Benutzer entweder mithilfe des Tabs "Energieeffizienz" basierend auf Energieträgerverbrauch abschätzen, oder alternativ als fester Wert direkt eingegeben werden.
 
 Für alle weiteren Eingabefelder dient Energiesparbericht.de als Vorlage. Auch die Möglichkeit eigene Zusatzfaktoren zu definieren soll ähnlich wie in Energiesparbericht implementiert werden.
 
-* VALERI-Eingabe-Formular für Wahrscheinlichster Fall, Best-Case und Worst-Case (Wie in ESB)
+* VALERI-Eingabe-Formular für Wahrscheinlichster Fall, Best-Case und Worst Case (Wie in ESB)
 * Zusatzfaktoren hinzufügen/entfernen/bearbeiten
     * Zur Darstellung `EditDisplayBox` verwenden.
     * Bearbeitung jeweils in separatem Pop-up
-    * Benötigt neue Datenstruktur Zusatzfaktoren (1:n verhältniss von Effizienzmaßnahmen zu Zusatzfaktoren)
+    * Benötigt neue Datenstruktur Zusatzfaktoren (1:n Verhältnis von Effizienzmaßnahmen zu Zusatzfaktoren)
 * Ausgabe der Ergebnisse wie in ESB, inklusive Cashflow-Tabelle
 
 ### 2.2.4.1. Neue Datenstruktur "Zusatzfaktor"
@@ -206,18 +218,18 @@ Für alle weiteren Eingabefelder dient Energiesparbericht.de als Vorlage. Auch d
 |zugehörige Maßnahme|Verweis Maßnahme|n:1|
 |Bezeichnung|`String`||
 |Einsparungsbetrag|`float`||
-|Art der Preisteigerung|`Enum`|Energie, sonstige, keine|
+|Art der Preissteigerung|`Enum`|Energie, sonstige, keine|
 |Häufigkeit|`Enum`|Jährlich, periodisch, einmalig|
 |Periode|`integer`||
-|Stop nach wievielen Jahren|`integer`||
+|Stop nach wie vielen Jahren|`integer`||
 |||
 
 ### 2.2.4.2. Ausbaumöglichkeit
-* Graph-Darstellung des Cashflows; benötigt Komponente um Graph zu Rendern.
+* Graf-Darstellung des Cashflows; benötigt Komponente um Graph zu Rendern.
 
 ## 3. Notizen
 
-Bisher existiert in *enerchart* ein Funktionsbereich "Maßnahmen und Notizen", der sehr oberflächlich zur Verwaltung von Effizienzmaßnahmen dienen sollte. Die Funktionalität war aber darauf begrenzt, das einem Datenpunkt zu einem bestimmten Zeitpunkt eine Notiz angehängt, und die Maßnahme als "Durchgeführt" markiert werden kann.
+Bisher existiert in *enerchart* ein Funktionsbereich "Maßnahmen und Notizen", der sehr oberflächlich zur Verwaltung von Effizienzmaßnahmen dienen sollte. Die Funktionalität war aber darauf begrenzt, dass einem Datenpunkt zu einem bestimmten Zeitpunkt eine Notiz angehängt, und die Maßnahme als "Durchgeführt" markiert werden kann.
 
 Mit der Einführung des neuen, umfangreicheren Managementsystems für Effizienzmaßnahmen soll dieser Funktionsbereich nun in lediglich "Notizen" umgewidmet werden. Der Funktionsumfang bleibt vorerst gleich, sodass eine Migration von Bestandssystemen möglichst simpel ist.
 
