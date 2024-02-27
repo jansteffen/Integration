@@ -42,7 +42,7 @@ In der Datenbank muss eine neue Datenstruktur angelegt werden, um Energieträger
 |---|---|---|---|
 |id|`integer`|Primärschlüssel|❌|
 |Name|`String`||✅|
-|Energieträgermedium|`Enum`|Strom/Öl/Kohle/...|✅|
+|Energieträgermedium|`Enum`|Strom/Öl/Kohle/... (Siehe Liste unten)|✅|
 |Preisentwicklung|Verweis unsichtbarer Datenpunkt (Typ Währung)||✅ (Nur neuster Wert)|
 |Preisentwicklung Datenquelle|Verweis Datenpunkt oder leer für manuelle Eingabe||❌|
 |CO2-Ausstoß pro kWh|Verweis unsichtbarer Datenpunkt (Typ Ausstoß kg)||❔ (Nur neuster Wert)|
@@ -59,6 +59,35 @@ In der Datenbank muss eine neue Datenstruktur angelegt werden, um Energieträger
 ❔ = Optional
 
 Für Preisentwicklung, CO2-Ausstoß und Brennwert werden im Hintergrund für den Benutzer nicht sichtbare Datenpunkte angelegt und verwendet. Die Werte dafür können entweder manuell vom Benutzer direkt eingegeben werden, oder von einem anderen ausgewählten Datenpunkt vom gleichen Typ bezogen werden.
+
+Liste der Energieträgermedien:
+
+1. Strom
+2. Heizöl 
+3. Benzin
+4. Benzin E10
+5. Diesel
+6. Flüssiggas (LPG)
+7. Erdgas (CNG)
+8. Kohle
+9. Biomethan/Biogas
+10. Holzhackschnitzel
+11. Holzpellets
+12. Pflanzenöl
+13. Solarthermie
+14. Geothermie
+15. Nahwärme
+16. Fernwärme
+17. Nahkälte
+18. Fernkälte
+19. Biodiesel
+20. Bioethanol
+21. Ersatzbrennstoffe
+22. Dampf
+23. Wasserstoff
+24. Sonstige
+
+Ähnliche Energieträgermedien können das gleiche Icon verwenden, zb. Benzin und Benzin E10, Nahwärme und Fernwärme. Icons sollten einen minimalistischen Stil verwenden und monochromatisch sein.
 
 ## 1.2. Pop-up Dialog "neuen Energieträger anlegen"
 
