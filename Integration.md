@@ -60,32 +60,44 @@ In der Datenbank muss eine neue Datenstruktur angelegt werden, um Energieträger
 
 Für Preisentwicklung, CO2-Ausstoß und Brennwert werden im Hintergrund für den Benutzer nicht sichtbare Datenpunkte angelegt und verwendet. Die Werte dafür können entweder manuell vom Benutzer direkt eingegeben werden, oder von einem anderen ausgewählten Datenpunkt vom gleichen Typ bezogen werden.
 
-Liste der Energieträgermedien:
+Die Auswahl des physischen Energieträgermediums erfolt aus einer vorgefertigten Liste. Jeder Eintrag dieser Liste beinhaltet auch eine passende Recheneinheit und ein räpresentatives Icon. Dafür wird auch wieder eine neue Datenstruktur in der Datenbank angelegt.
 
-1. Strom
-2. Heizöl 
-3. Benzin
-4. Benzin E10
-5. Diesel
-6. Flüssiggas (LPG)
-7. Erdgas (CNG)
-8. Kohle
-9. Biomethan/Biogas
-10. Holzhackschnitzel
-11. Holzpellets
-12. Pflanzenöl
-13. Solarthermie
-14. Geothermie
-15. Nahwärme
-16. Fernwärme
-17. Nahkälte
-18. Fernkälte
-19. Biodiesel
-20. Bioethanol
-21. Ersatzbrennstoffe
-22. Dampf
-23. Wasserstoff
-24. Sonstige
+|Spalte|Typ|Notiz|
+|---|---|---|
+|id|`integer`|Primärschlüssel|
+|Name|`String`||
+|Recheneinheit|`Enum`||
+|Icon|URL||
+|||
+
+Diese Datenstruktur soll standardmäßig mit folgenden Einträgen befüllt sein:
+
+|Name|Recheneinheit|
+|---|---|
+|Strom|kWh|
+|Heizöl|Liter|
+|Benzin|Liter|
+|Benzin E10|Liter|
+|Diesel|Liter|
+|Flüssiggas (LPG)|Liter|
+|Erdgas (CNG)|Liter|
+|Kohle|kg|
+|Biomethan/Biogas|Liter|
+|Holzhackschnitzel|kg|
+|Holzpellets|kg|
+|Pflanzenöl|Liter|
+|Solarthermie|??|
+|Geothermie|??|
+|Nahwärme|??|
+|Fernwärme|??|
+|Nahkälte|??|
+|Fernkälte|??|
+|Biodiesel|Liter|
+|Bioethanol|Liter|
+|Ersatzbrennstoffe|??|
+|Dampf|Liter|
+|Wasserstoff|Liter|
+|Sonstige|??|
 
 Ähnliche Energieträgermedien können das gleiche Icon verwenden, zb. Benzin und Benzin E10, Nahwärme und Fernwärme. Icons sollten einen minimalistischen Stil verwenden und monochromatisch sein.
 
